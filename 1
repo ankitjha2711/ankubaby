@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity >=0.7.0 <0.9.0;
+
+contract BirthdayGreeter {
+    address payable public kevin;
+    address payable public eric;
+    string public greeting = "Happy Birthday";
+
+    constructor(address payable _kevin, address payable _eric) {
+        kevin = _kevin;
+        eric = _eric;
+    }
+
+    function sendBirthdayWishes() public payable {
+        require(msg.sender == kevin && msg.value == 0.2 ether, "Please send exactly 0.2 ether");
+        eric.transfer(msg.value);
+        emit BirthdayGreeting(greeting);
+    }
+
+    event BirthdayGreeting(string greetingMessage);
+}
