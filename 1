@@ -1,3 +1,18 @@
+//https://sepoliafaucet.com/?authRefresh=True
+This is a Solidity smart contract that allows someone (presumably named Kevin) to send birthday wishes and a 0.2 ether payment to someone else (presumably named Eric) via the sendBirthdayWishes() function.
+
+Here is the step-by-step algorithm for the code:
+
+The contract is created with two payable address variables, kevin and eric, and a string variable greeting.
+When the contract is deployed, the constructor is called with two payable addresses, _kevin and _eric, which are assigned to kevin and eric, respectively.
+The sendBirthdayWishes() function can be called by anyone, but only Kevin is allowed to send the birthday wishes and payment. The function checks that msg.sender (the address of the sender) is equal to kevin, and that msg.value (the amount of ether sent with the transaction) is equal to 0.2 ether.
+If the sender is Kevin and the payment is correct, the function transfers the payment to Eric's address (eric.transfer(msg.value)).
+The function emits a BirthdayGreeting event, passing the greeting message as an argument.
+Any external code can listen for the BirthdayGreeting event and receive the greeting message as a result.
+Note that this code has a specific licensing requirement, as indicated by the SPDX-License-Identifier comment at the top of the code.
+
+
+
 // SPDX-License-Identifier: GPL-3.0
 
 pragma solidity >=0.7.0 <0.9.0;
