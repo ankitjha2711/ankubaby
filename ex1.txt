@@ -1,0 +1,69 @@
+Question:
+
+Consider, 32 bytes of floating-point data occurred every second which is serially transmitted using an Arduino hardware. Demonstrate the transfer of data using IEEE11073 protocol.
+Components required: Arduino Uno board, Com Debug, MATLAB
+Step 1: Hardcode eight floating point values in Arduino Uno board sensorData = {-1.5, -12.7, 8.3, 6.5} Step 2: Implement IEEE11073 protocol
+Step 3: Convert the floating point numbers of sensorData array into IEEE11073 format
+Step 4: Transfer the IEEE11073 formatted data using serial port
+Step 5: Reconstruct the IEEE11073 formatted data into actual floating point numbers
+
+#receiver
+
+#include <Wire.h>
+
+float results[100];
+int count = 0;
+
+void setup() {
+  Serial.begin(9600); // Set baud rate to 9600
+}
+void loop() {
+  if (Serial.available() >= sizeof(float)) { // Check if data is available
+    float receivedData;
+    Serial.readBytes((char*)&receivedData, sizeof(float)); // Read float data
+    results[count] = receivedData; // Store the received data in the results array
+    count++; // Increment the count
+  }
+}
+
+#sender
+
+#include <Wire.h>
+
+float sensorData[] = {-1.5, -12.7, 8.3, 6.5};
+void setup() {
+  Serial.begin(9600); // Set baud rate to 9600
+}
+void loop() {
+  for (int i = 0; i < 4; i++) {
+    Serial.write((byte*)&sensorData[i], sizeof(float)); // Send float data
+    delay(100); // Delay for 100 milliseconds
+  }
+}
+
+Theory:
+
+IEEE11073 is a standard protocol for exchanging medical device information. It is commonly used in healthcare and medical applications. The protocol defines a set of rules for formatting and exchanging data between devices.
+
+To demonstrate the transfer of data using IEEE11073 protocol, we can follow the steps given below:
+
+Step 1: Hardcode eight floating point values in Arduino Uno board sensorData = {-1.5, -12.7, 8.3, 6.5}
+
+Step 2: Implement IEEE11073 protocol
+In the IEEE11073 protocol, each data item is represented by a tuple consisting of a unique object identifier (OID), a value, and a set of attributes. The protocol also defines a set of encoding rules to format and encode the data items for transmission.
+
+Step 3: Convert the floating point numbers of sensorData array into IEEE11073 format
+To convert the floating point numbers into IEEE11073 format, we can use the following algorithm:
+
+For each floating point number in the sensorData array, convert it to a 32-bit binary representation.
+Prepend the binary representation with a 24-bit header consisting of the OID and the attributes.
+Apply the encoding rules specified by the IEEE11073 protocol to the resulting data item to format it for transmission.
+Step 4: Transfer the IEEE11073 formatted data using serial port
+To transfer the IEEE11073 formatted data using the serial port, we can use the Serial.write() function in Arduino. This function takes a byte array as input and writes it to the serial port.
+
+Step 5: Reconstruct the IEEE11073 formatted data into actual floating point numbers
+To reconstruct the IEEE11073 formatted data into actual floating point numbers, we can use the following algorithm:
+
+Read the received data from the serial port into a byte array.
+Split the byte array into individual data items, each consisting of a 24-bit header and a 32-bit value.
+Apply the decoding rules specified by the IEEE11073 protocol to each data item to extract the floating point value.

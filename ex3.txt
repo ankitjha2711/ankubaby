@@ -1,0 +1,134 @@
+Question:
+
+Draw and explain the architecture of RS232 and Inter-Integrated Circuit (I2C) communication for establishing communication between, (i) One Arduino Uno board and Desktop Computer (ii) two Arduino Uno boards.
+Design and develop a closed loop control system.
+System one (slave) will turn ON/OFF or control the speed of a motor using PWM logic, upon the command received from the system two (master).
+System two continuously monitor the temperature of the atmosphere and set four different temperature levels (Level_one, Level_two, Level_three and Level_four) and pass it to the system one using I2C communication.
+Set the values of Level_one, Level_two, Level_three and Level_four at system two through serial port communication.
+Components required: Arduino Uno board – 2 Nos, temperature sensor – 1 No, motor with driver – 1 No
+
+(
+    https://www.circuitbasics.com/wired-communication-between-two-arduinos/
+    https://microcontrollerslab.com/arduino-i2c-tutorial-communication-between-arduino-boards/
+    https://www.instructables.com/I2C-between-Arduinos/
+)
+
+#slave
+
+#include <Wire.h>
+const int motorPin = 9;
+
+void setup() {
+  Wire.begin(8);
+  Wire.onReceive(receiveData);
+  pinMode(motorPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  delay(100);
+}
+
+void receiveData(int byteCount) {
+  while (Wire.available()) {
+    int temperatureLevel = Wire.read();
+    switch (temperatureLevel) {
+      case 1:
+        analogWrite(motorPin, 128);
+        break;
+      case 2:
+        analogWrite(motorPin, 64);
+        break;
+      case 3:
+        analogWrite(motorPin, 32);
+        break;
+      case 4:
+        digitalWrite(motorPin, LOW);
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+#master
+
+#include <Wire.h>
+const int temperatureSensorPin = A0;
+int temperatureLevelOne = 30;
+int temperatureLevelTwo = 35;
+int temperatureLevelThree = 40;
+int temperatureLevelFour = 45;
+
+void setup() {
+  Wire.begin();
+  Serial.begin(9600);
+  Serial.println("Enter values for temperature levels:");
+}
+
+void loop() {
+  int temperature = analogRead(temperatureSensorPin);
+  temperature = map(temperature, 0, 1023, 0, 100);
+  if (temperature >= temperatureLevelFour) {
+    Wire.beginTransmission(8);
+    Wire.write(4);
+    Wire.endTransmission();
+  } else if (temperature >= temperatureLevelThree) {
+    Wire.beginTransmission(8);
+    Wire.write(3);
+    Wire.endTransmission();
+  } else if (temperature >= temperatureLevelTwo) {
+    Wire.beginTransmission(8);
+    Wire.write(2);
+    Wire.endTransmission();
+  } else if (temperature >= temperatureLevelOne) {
+    Wire.beginTransmission(8);
+    Wire.write(1);
+    Wire.endTransmission();
+  }
+  delay(1000);
+  if (Serial.available()) {
+    temperatureLevelOne = Serial.parseInt();
+    temperatureLevelTwo = Serial.parseInt();
+    temperatureLevelThree = Serial.parseInt();
+    temperatureLevelFour = Serial.parseInt();
+  }
+}
+
+Theory:
+
+RS232 Communication Architecture:
+
+RS232 is a serial communication protocol commonly used for establishing a communication link between two devices. The architecture of RS232 involves the use of a transmitter, receiver, and a serial cable for data transmission.
+
+(i) Communication between one Arduino Uno board and Desktop Computer:
+
+In this scenario, the Arduino Uno board will act as a transmitter and the desktop computer will act as a receiver. The transmitter will convert the data into serial format and transmit it through the serial port using a serial cable. The receiver will receive the data, decode it, and process it.
+
+(ii) Communication between two Arduino Uno boards:
+
+In this scenario, one Arduino Uno board will act as a transmitter and the other Arduino Uno board will act as a receiver. The transmitter will convert the data into serial format and transmit it through the serial port using a serial cable. The receiver will receive the data, decode it, and process it.
+
+I2C Communication Architecture:
+
+I2C is a serial communication protocol commonly used for establishing a communication link between multiple devices. The architecture of I2C involves the use of a master device, one or more slave devices, and a serial bus for data transmission.
+
+(i) Communication between one Arduino Uno board (slave) and Desktop Computer (master):
+
+In this scenario, the Arduino Uno board will act as a slave device and the desktop computer will act as a master device. The master device will continuously monitor the temperature using the temperature sensor and set four different temperature levels. The master device will then pass these temperature levels to the slave device through the I2C bus. The slave device will receive the data, decode it, and control the motor using PWM logic.
+
+(ii) Communication between two Arduino Uno boards (one master and one slave):
+
+In this scenario, one Arduino Uno board will act as a master device and the other Arduino Uno board will act as a slave device. The master device will continuously monitor the temperature using the temperature sensor and set four different temperature levels. The master device will then pass these temperature levels to the slave device through the I2C bus. The slave device will receive the data, decode it, and control the motor using PWM logic.
+
+Closed Loop Control System Design:
+
+To design the closed loop control system, we need to follow these steps:
+
+Monitor the temperature using the temperature sensor.
+Set four different temperature levels (Level_one, Level_two, Level_three, and Level_four) using serial port communication.
+Pass these temperature levels to the slave device through the I2C bus.
+The slave device will receive the data, decode it, and control the motor using PWM logic.
+Continuously monitor the temperature and adjust the motor speed based on the temperature levels.
+
+In this system, the master device continuously monitors the temperature using the temperature sensor and sets four different temperature levels (Level_one, Level_two, Level_three, and Level_four) using serial port communication. The master device then passes these temperature levels to the slave device through the I2C bus. The slave device receives the data, decodes it, and controls the motor using PWM logic. The motor speed is adjusted based on the temperature levels to maintain the desired temperature level.

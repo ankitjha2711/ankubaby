@@ -1,0 +1,93 @@
+Question:
+
+Consider, 16 bits integer type data of a sensor is serially transmitted using an Arduino hardware. The maximum data size that can be transmitted through serial port is one byte. Write a C or C++ program to receive the serial port data using visual studio.
+Case 1: convert the 16-bit unsigned integer into hexadecimal number before transmission. Reconstruct the data into decimal value at the receiver side.
+Example:
+Decimal: 37456
+Hex: 0X9250
+Transmitted data: 0x92, 0x50
+Case 2: convert the 16-bit signed integer into hexadecimal number before transmission. Reconstruct the data into decimal value at the receiver side.
+Example:
+Decimal: -11975
+Hex: 0XAEC7
+Transmitted data: 0xAE, 0xC7
+Components required: Arduino Uno board, Com Debug, Visual Studio Step 1: Hardcode 16-bit data in Arduino Uno board.
+Step 2: Implement dec2hex function
+Step 3: Implement comport using C or C++ program
+Step 4: Implement hex2dec function
+Step 5: Demonstration
+
+#before transmission
+
+#include <Arduino.h>
+
+void setup() {
+  // Initialize serial communication at 9600 baud
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Decimal value to be transmitted
+  unsigned short value = 37456;
+
+  // Split the decimal into two hexadecimal bytes
+  unsigned char highByte = (value >> 8) & 0xFF;
+  unsigned char lowByte = value & 0xFF;
+
+  // Transmit the hexadecimal bytes over the serial port
+  Serial.write(highByte);
+  Serial.write(lowByte);
+
+  // Wait for a while before transmitting again
+  delay(1000);
+}
+
+#after transmission
+
+#include <Arduino.h>
+
+void setup() {
+  // Initialize serial communication at 9600 baud
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Decimal value to be transmitted
+  short value = -11975;
+
+  // Split the decimal into two hexadecimal bytes
+  unsigned char highByte = (value >> 8) & 0xFF;
+  unsigned char lowByte = value & 0xFF;
+
+  // Transmit the hexadecimal bytes over the serial port
+  Serial.write(highByte);
+  Serial.write(lowByte);
+
+  // Wait for a while before transmitting again
+  delay(1000);
+}
+
+Theory:
+
+To transmit 16-bit integer type data using an Arduino Uno board, we need to split the data into two bytes and then transmit them over the serial port. In this case, we have two scenarios: transmitting an unsigned integer and transmitting a signed integer. In both cases, we will convert the integer into a hexadecimal number before transmission.
+
+Here are the steps to transmit an unsigned integer:
+
+Hardcode the 16-bit unsigned integer data in the Arduino Uno board.
+Split the 16-bit integer into two bytes (high byte and low byte) by right-shifting the integer by 8 bits to get the high byte and performing a bitwise AND with 0xFF to get the low byte.
+Convert each byte into a hexadecimal number using the dec2hex function.
+Transmit the hexadecimal bytes over the serial port using the Serial.write function.
+Here are the steps to transmit a signed integer:
+
+Hardcode the 16-bit signed integer data in the Arduino Uno board.
+Split the 16-bit integer into two bytes (high byte and low byte) by right-shifting the integer by 8 bits to get the high byte and performing a bitwise AND with 0xFF to get the low byte.
+Convert each byte into a hexadecimal number using the dec2hex function.
+Transmit the hexadecimal bytes over the serial port using the Serial.write function.
+To receive the transmitted data using Visual Studio, we will implement a comport using C or C++ program. We will then read the bytes from the serial port and reconstruct the original decimal value by combining the high byte and low byte using the hex2dec function.
+
+Here is the algorithm to receive and reconstruct the transmitted data:
+
+Initialize the comport with the correct parameters (baud rate, parity, stop bits, etc.).
+Read the high byte and low byte from the serial port using the Serial.read function.
+Convert each byte from hexadecimal to decimal using the hex2dec function.
+Combine the high byte and low byte to reconstruct the original decimal value using bitwise operations and arithmetic operations.
