@@ -91,3 +91,21 @@ Initialize the comport with the correct parameters (baud rate, parity, stop bits
 Read the high byte and low byte from the serial port using the Serial.read function.
 Convert each byte from hexadecimal to decimal using the hex2dec function.
 Combine the high byte and low byte to reconstruct the original decimal value using bitwise operations and arithmetic operations.
+
+Here's the algorithm:
+
+Import the Arduino library, which provides functions for communicating with the serial port.
+
+In the setup() function, initialize the serial port with a baud rate of 9600.
+
+In the loop() function:
+
+a. Assign the decimal value to be transmitted to a variable named "value". In this example, the value is -11975.
+
+b. Split the decimal value into two bytes, a high byte and a low byte. To do this, use the bitwise right shift operator (>>) to shift the value 8 bits to the right, then bitwise AND the result with the hexadecimal value 0xFF to extract the high byte. Assign this value to a variable named "highByte". Similarly, use the bitwise AND operator (&) with the hexadecimal value 0xFF to extract the low byte, and assign it to a variable named "lowByte".
+
+c. Transmit the high and low bytes over the serial port using the Serial.write() function.
+
+d. Add a delay of 1000 milliseconds (1 second) to allow time for the transmission to complete before transmitting the next value.
+
+Upload the code to the Arduino board and verify that the serial port is set up correctly by opening the Serial Monitor. The transmitted values should be displayed in hexadecimal format.

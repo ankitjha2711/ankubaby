@@ -132,3 +132,46 @@ The slave device will receive the data, decode it, and control the motor using P
 Continuously monitor the temperature and adjust the motor speed based on the temperature levels.
 
 In this system, the master device continuously monitors the temperature using the temperature sensor and sets four different temperature levels (Level_one, Level_two, Level_three, and Level_four) using serial port communication. The master device then passes these temperature levels to the slave device through the I2C bus. The slave device receives the data, decodes it, and controls the motor using PWM logic. The motor speed is adjusted based on the temperature levels to maintain the desired temperature level.
+
+Algorithm for Temperature Control System using Arduino and I2C Communication:
+
+Slave Code
+Include the Wire library for I2C communication and define the motor control pin.
+
+In the setup function:
+a. Start the I2C communication by calling the Wire.begin() function with the slave address.
+b. Set the callback function for receiving data over I2C by calling the Wire.onReceive() function and passing the function name.
+c. Set the motor control pin as an output.
+d. Start the serial communication at a baud rate of 9600.
+
+In the loop function:
+a. Add a delay of 100 milliseconds.
+
+Define the receiveData function to read the incoming data over I2C:
+a. Check if there is any data available to read by calling the Wire.available() function.
+b. Read the temperature level received from the master using the Wire.read() function.
+c. Use a switch case to set the motor speed based on the temperature level received:
+i. For temperature level 1, set the motor speed to 50% by calling the analogWrite() function with a value of 128.
+ii. For temperature level 2, set the motor speed to 25% by calling the analogWrite() function with a value of 64.
+iii. For temperature level 3, set the motor speed to 12.5% by calling the analogWrite() function with a value of 32.
+iv. For temperature level 4, turn off the motor by calling the digitalWrite() function with a value of LOW.
+v. For any other temperature level, do nothing.
+
+Master Code
+Include the Wire library for I2C communication and define the temperature sensor pin.
+Define variables for the temperature levels.
+In the setup function:
+a. Start the I2C communication by calling the Wire.begin() function.
+b. Start the serial communication at a baud rate of 9600.
+c. Print a message to prompt the user to enter the temperature level values.
+In the loop function:
+a. Read the temperature value from the sensor using the analogRead() function and map it to a value between 0 and 100 using the map() function.
+b. Use a series of if-else statements to determine the appropriate temperature level based on the temperature value:
+i. If the temperature is greater than or equal to temperature level 4, send a value of 4 over I2C using the Wire.write() function.
+ii. If the temperature is greater than or equal to temperature level 3, send a value of 3 over I2C using the Wire.write() function.
+iii. If the temperature is greater than or equal to temperature level 2, send a value of 2 over I2C using the Wire.write() function.
+iv. If the temperature is greater than or equal to temperature level 1, send a value of 1 over I2C using the Wire.write() function.
+v. If the temperature is below all temperature levels, do nothing.
+c. Add a delay of 1000 milliseconds.
+d. Check if any data is available on the serial port using the Serial.available() function.
+e. If data is available, update the temperature level variables using the Serial.parseInt() function.

@@ -67,3 +67,25 @@ To reconstruct the IEEE11073 formatted data into actual floating point numbers, 
 Read the received data from the serial port into a byte array.
 Split the byte array into individual data items, each consisting of a 24-bit header and a 32-bit value.
 Apply the decoding rules specified by the IEEE11073 protocol to each data item to extract the floating point value.
+
+Algorithm for sending float data from the sender to the receiver using Serial communication:
+
+Sender code:
+
+Initialize the sensorData array with the float values that need to be sent.
+Set up the Serial communication with the receiver using the Serial.begin() function.
+In the loop function, iterate over the sensorData array.
+For each element in the array, use the Serial.write() function to send the float data as a byte array by passing the address of the current array element and the sizeof(float) as arguments.
+Add a delay of 100 milliseconds using the delay() function to ensure that the receiver has enough time to receive the data.
+
+Receiver code:
+
+Set up the Serial communication with the sender using the Serial.begin() function.
+Create an empty results array to store the received float data.
+Initialize a count variable to keep track of the number of received float data elements.
+In the loop function, use the Serial.available() function to check if any data is available in the Serial buffer.
+If data is available, create a float variable called receivedData.
+Use the Serial.readBytes() function to read the byte array received from the sender and store it as a float in the receivedData variable.
+Store the receivedData in the results array at the index indicated by the count variable.
+Increment the count variable.
+Continue the loop until all expected float values are received.
