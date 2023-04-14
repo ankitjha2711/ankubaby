@@ -1,3 +1,4 @@
+//npm install prompt-sync
 
 const prompt = require('prompt-sync')();
 
@@ -85,9 +86,28 @@ var var3 = prompt("cat3: ")
 console.log("Mining block 1...");
 koreCoin.addBlock(new Block(1, "01/01/2018", { cat1: var1, cat2: var2, cat3: var3 }));
 console.log("Mining block 2...");
-koreCoin.addBlock(new Block(2, "02/01/2018", { amount: 40 }));
+koreCoin.addBlock(new Block(2, "02/01/2018",  { cat1: var1, cat2: var2, cat3: var3 }));
 console.log("Mining block 3...");
-koreCoin.addBlock(new Block(3, "02/01/2018", { amount: 40 }));
+koreCoin.addBlock(new Block(3, "02/01/2018",  { cat1: var1, cat2: var2, cat3: var3 }));
 
 const end = Date.now();
-console.log(`Execution time: ${end - start} ms`);
+console.log(`Execution time: ${end - start} ms`)
+
+The algorithm for the given code is as follows:
+
+Import the necessary libraries 'prompt-sync' and 'crypto-js/sha256'.
+Define a class 'Block' with constructor and methods:
+a. Constructor takes 'index', 'timestamp', 'data', and 'previousHash' as input parameters and initializes them.
+b. 'calculateHash()' method returns the SHA256 hash of concatenated 'index', 'previousHash', 'timestamp', 'data', and 'nonce' (which is initialized as 0).
+c. 'mineBlock(difficulty)' method takes 'difficulty' as input parameter and increments 'nonce' until the first 'difficulty' characters of the calculated hash are all '0's.
+Define a class 'Blockchain' with constructor and methods:
+a. Constructor initializes the chain with the genesis block created using the 'createGenesisBlock()' method, and sets the mining difficulty as 3.
+b. 'createGenesisBlock()' method creates the first block in the chain with 'index' as 0, 'timestamp' as "02/01/2018", 'data' as "Genesis Block", and 'previousHash' as "0".
+c. 'getlatestBlock()' method returns the latest block in the chain.
+d. 'addBlock(newBlock)' method adds a new block to the chain by setting the 'previousHash' of the new block as the hash of the latest block in the chain, and calling the 'mineBlock()' method of the new block with the mining difficulty.
+e. 'isChainValid()' method iterates over all blocks in the chain and checks whether their hashes and 'previousHash' values are valid.
+Create a new instance of the 'Blockchain' class and set it to 'koreCoin'.
+Use the 'prompt-sync' library to take input from the user for 'cat1', 'cat2', and 'cat3' values and store them in 'var1', 'var2', and 'var3' respectively.
+Start the timer using 'Date.now()'.
+Add three new blocks to the 'koreCoin' chain using the 'addBlock()' method of the 'Blockchain' class with the data as objects containing 'cat1', 'cat2', and 'cat3' values and different timestamps.
+Stop the timer and log the execution time.
